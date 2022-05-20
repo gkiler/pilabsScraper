@@ -1,1 +1,5 @@
 Drugs/
+
+*/__pycache__/*
+
+venv/

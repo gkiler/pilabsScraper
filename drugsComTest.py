@@ -10,15 +10,17 @@ def drugsComDrugs():
     # html_text = requests.get(takeRequest).text
     time.sleep(5)
     base_html = requests.get("https://www.drugs.com/drug_information.html").text
-    
 
     base_soup = BeautifulSoup(base_html, 'lxml')
     print('Retrieved base indices...')
     
-
+    if not os.path.exists(originDir + "\\Drugs"):
+        os.mkdir(originDir + "\\Drugs")
+    os.chdir(originDir + "\\Drugs")
     osDir = originDir + "\\" + "Drugs\\" "drugsCom"
     if not os.path.exists(osDir):
             os.mkdir(osDir)
+    os.chdir(osDir)
 
     indices = base_soup.find('nav', class_='ddc-paging')
     indexLinks = indices.find_all('a',href=True)
@@ -74,5 +76,5 @@ def drugsComDrugs():
                 with io.open(drugName+'.txt','w',encoding='utf-8') as f:
                     f.write(drugInfo.prettify())
 
-originDir = os.getcwd() 
+originDir = os.getcwd()
 drugsComDrugs()
