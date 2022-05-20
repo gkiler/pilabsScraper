@@ -25,35 +25,35 @@ class WebsiteClient:
     def run(self, Scraper) -> None:
         '''Runs the client based on the user-defined methods.'''
 
-        self.verboseprint(f"Running {self._name} client...")
+        self.verboseprint(f"[LOG] Running {self._name} client...")
 
         # Parse the extension list
-        self.verboseprint(f"    - Parsing list for {self._name} client... ", end="")
+        self.verboseprint(f"[LOG]    - Parsing list for {self._name} client... ")
         self.parse_list()
-        self.verboseprint("(done)") 
+        self.verboseprint("[LOG] (done)") 
 
         # Create base_url
-        self.verboseprint(f"    - Creating base_url for {self._name} client... ", end="")
+        self.verboseprint(f"[LOG]    - Creating base_url for {self._name} client... ")
         self.create_base_url()
         self.verboseprint("(done)") 
 
         # Make the scraper
-        self.verboseprint(f"    - Creating scraper for {self._name} client... ", end="")
+        self.verboseprint(f"[LOG]    - Creating scraper for {self._name} client... ")
         self.scraper = Scraper(self._base_url, self._ext_list, verbose=True)
-        self.verboseprint("(done)") 
+        self.verboseprint("[LOG] (done)") 
 
         # Run the scraper
-        self.verboseprint(f"    - Running scraper for {self._name} client... ")
+        self.verboseprint(f"[LOG]    - Running scraper for {self._name} client... ")
         self.scraper.run()
-        self.verboseprint(f"    - Running scraper for {self._name} client... (done)")
+        self.verboseprint(f"[LOG]    - Running scraper for {self._name} client... (done)")
 
         # Dump into file
-        self.verboseprint(f"    - Dumping scraper output for {self._name} client... ", end="")
+        self.verboseprint(f"[LOG]    - Dumping scraper output for {self._name} client... ")
         # self.dump()
-        self.verboseprint("(TBD)") 
+        self.verboseprint("[LOG] (TBD)") 
 
         # Print regardless of verbosity
-        print(f"Done running {self._name}.\n")
+        print(f"[LOG] Done running {self._name}.\n")
 
     def parse_list(self) -> None:
         '''user-defined method to control how to parse the typically-found ordered list for any type of object on any type of website.'''

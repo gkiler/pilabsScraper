@@ -1,6 +1,8 @@
 import threading
 import time
 
+from threading import Thread
+
 class threadTesting:
 
     def __init__(self):
@@ -17,7 +19,6 @@ class threadTesting:
         time.sleep(1)
         print('other thread finished')
 
-
     def run(self):
         t1 = threading.Thread(target=self.scrapeExample)
         t2 = threading.Thread(target=self.otherExample)
@@ -26,6 +27,36 @@ class threadTesting:
         t1.join()
         t2.join()
 
+class MayoThreadTest(Thread):
+    def run(self):
+        print("MayoThreadTest Start")
+        time.sleep(2)
+        print("MayoThreadTest End")
+
+class WebMDThreadTest(Thread):
+    def run(self):
+        print("WebMDThreadTest Start")
+        time.sleep(2)
+        print("WebMDThreadTest End")
+
+class DrugsThreadTest(Thread):
+    def run(self):
+        print("DrugsThreadTest Start")
+        time.sleep(2)
+        print("DrugsThreadTest End")
+
+class WikiThreadTest(Thread):
+    def run(self):
+        print("WikiThreadTest Start")
+        time.sleep(2)
+        print("WikiThreadTest End")
+
 if __name__ == '__main__':
-    test = threadTesting()
-    test.run()
+    threads = [MayoThreadTest, WebMDThreadTest, DrugsThreadTest, WikiThreadTest]
+
+    for i in range(4):
+        t = threads[i]()
+        t.start()
+
+    # test = threadTesting()
+    # test.run()

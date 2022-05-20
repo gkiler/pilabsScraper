@@ -37,7 +37,11 @@ def drugsComDrugs():
         print('Retrieving Drugs.com URL ',url,'...')
 
         time.sleep(5)
-        htmlText = requests.get(url).text
+        htmlText = requests.get(url)#.text
+
+        print(htmlText.status_code)
+
+        return
 
         soup = BeautifulSoup(htmlText,'lxml')
         print('Retrieved Drugs.com URL ',url)

@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 import requests
-import time
 import io
 import os
 import multiprocessing
@@ -11,20 +10,17 @@ from scrapers.DrugsComScraper import DrugsComScraper
 from scrapers.MayoclinicScraper import MayoclinicScraper
 from scrapers.WebsiteScraper import WebsiteScraper
 
+from ClientThreads.ClientThreads import *
+
+from time import sleep
+
+THREADS = [DrugsComThread]
+
 def main():
-    scrapeMayoclinic = MayoclinicScraper(base_url="https://www.mayoclinic.org/", ext=["drugs-supplements", "drug-list?letter=A"])
-    # mayoClinicClient = MayoclinicClient(
-    #     name="Mayoclinic",
-    #     base_url="https://www.mayoclinic.org/",
-    #     ext=["drugs-supplements", "drug-list?letter=A"],
-    #     verbose=True
-    #     ).run(MayoclinicScraper)
-    drugsComClient = DrugsComClient(
-        name="drugs.com",
-        base_url="https://www.drugs.com",
-        ext="[]",
-        verbose=1
-    ).run(DrugsComScraper)
+    # Runs every thread at the same time. Might want to wait a bit to run them
+    for i in range(len(THREADS)):
+        t = THREADS[i]()
+        t.start()
 
 if __name__ == "__main__":
     main()

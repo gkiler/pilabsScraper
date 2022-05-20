@@ -14,11 +14,11 @@ class DrugsComScraper(WebsiteScraper):
     def scrape(self):
         originDir = os.getcwd()
 
-        base_url = 'https://www.drugs.com'
-        # takeRequest = input("Enter base URL to scrape (i.e. https://www.website.org/index/diseases/letter=A\n")
-        # html_text = requests.get(takeRequest).text
+        base_url = self._base_url
+        print(base_url)
+
         time.sleep(5)
-        base_html = requests.get("https://www.drugs.com/drug_information.html").text
+        base_html = requests.get(base_url + "/".join(self._ext)).text
 
         base_soup = BeautifulSoup(base_html, 'lxml')
         print('Retrieved base indices...')
@@ -48,10 +48,12 @@ class DrugsComScraper(WebsiteScraper):
             time.sleep(5)
             htmlText = requests.get(url).text
 
+            print(htmlText.status_code)
+
             soup = BeautifulSoup(htmlText,'lxml')
             print('Retrieved Drugs.com URL ',url)
 
-            subIndices = soup.find('nav',class_='ddc-paging paging-list-wrap ddc-mgb-2')
+            subIndices = soup.find('nav', class_='ddc-paging paging-list-wrap ddc-mgb-2')
             subIndexLinks = subIndices.find_all('a',href=True)
 
             for subLetter in subIndexLinks:
@@ -61,8 +63,8 @@ class DrugsComScraper(WebsiteScraper):
                 print('Retrieved Drugs.com URL ', base_url + subLetter['href'])
                 subDrugSoup = BeautifulSoup(subHtmlText.text,'lxml')
 
-                subDrug = subDrugSoup.find('ul',class_='ddc-list-column-2')
-                subDrugList = subDrug.find_all('a',href=True)
+                subDrug = subDrugSoup.find('ul', class_='ddc-list-column-2')
+                subDrugList = subDrug.find_all('a', href=True)
                 
                 for drug in subDrugList:
                     drugName = drug.get_text()

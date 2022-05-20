@@ -2,7 +2,7 @@ import string
 
 
 class WebsiteScraper:
-    def __init__(self, base_url=None, ext=list(), verbose=True):
+    def __init__(self, base_url=None, ext=list(), verbose=False):
         '''
         * Initializes the WebsiteScraper. \n
         base_url: url for the base website\n
@@ -17,7 +17,7 @@ class WebsiteScraper:
 
     def scrape(self) -> string:
         # Querying
-        self.verboseprint(f"            - querying \"{self._query_url}\"... ", end="")
+        self.verboseprint(f"            - querying \"{self._query_url}\"... ")
         # query TBD
 
         # Done querying
