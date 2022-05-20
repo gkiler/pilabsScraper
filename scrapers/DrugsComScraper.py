@@ -7,15 +7,10 @@ from bs4 import BeautifulSoup
 import io
 
 class DrugsComScraper(WebsiteScraper):
-
-    def run(self):
-        self.scrape()
-
     def scrape(self):
         originDir = os.getcwd()
 
         base_url = self._base_url
-        print(base_url)
 
         time.sleep(5)
         base_html = requests.get(base_url + "/".join(self._ext)).text
@@ -47,8 +42,6 @@ class DrugsComScraper(WebsiteScraper):
 
             time.sleep(5)
             htmlText = requests.get(url).text
-
-            print(htmlText.status_code)
 
             soup = BeautifulSoup(htmlText,'lxml')
             print('Retrieved Drugs.com URL ',url)

@@ -14,18 +14,13 @@ class WebsiteScraper:
         self._query_url = self._base_url + "/".join(self._ext)
 
         self.verboseprint = print if self._verbose else lambda x: None
-
-    def scrape(self) -> string:
-        # Querying
-        self.verboseprint(f"            - querying \"{self._query_url}\"... ")
-        # query TBD
-
-        # Done querying
-        self.verboseprint("(done)")
+    
+    def parse():
+        '''User-defined parse function to get through the website specifically'''
         pass
 
     def run(self) -> None:
-        '''Runs the scraper based on the user-defined methods'''
-
-        self.verboseprint("         Scraping...")
+        '''
+        Calls the scrape method
+        '''
         self.scrape()

@@ -1,16 +1,17 @@
 from threading import Thread
 from time import time
 
-from clients.MayoclinicClient import MayoclinicClient
-from clients.DrugsComClient import DrugsComClient
+# Scrapers
 from scrapers.DrugsComScraper import DrugsComScraper
 from scrapers.MayoclinicScraper import MayoclinicScraper
-from scrapers.WebsiteScraper import WebsiteScraper
+
+# Clients
+from clients.WebsiteClient import WebsiteClient
 
 class MayoClinicThread(Thread):
     def run(self):
         print("[START] MayoClinicClient")
-        mayoClinicClient = MayoclinicClient(
+        mayoClinicClient = WebsiteClient(
             name="Mayoclinic",
             base_url="https://www.mayoclinic.org/",
             ext=["", "drugs-supplements", "drug-list?letter=A"],
@@ -18,16 +19,15 @@ class MayoClinicThread(Thread):
         ).run(MayoclinicScraper)
         print("[END] MayoClinicClient")
 
-class WebMDThreadTest(Thread):
-    def run(self):
-        print("[START] Redundant Thread")
-        print("[END] Redundant Thread")
-        pass
+# class WebMDThreadTest(Thread):
+#     def run(self):
+#         print("[START] Redundant Thread")
+#         print("[END] Redundant Thread")
 
 class DrugsComThread(Thread):
     def run(self):
         print("[START] DrugsComClient")
-        drugsComClient = DrugsComClient(
+        drugsComClient = WebsiteClient(
             name="drugs.com",
             base_url="https://www.drugs.com",
             ext=["", "drug_information.html"],
@@ -35,8 +35,7 @@ class DrugsComThread(Thread):
         ).run(DrugsComScraper)
         print("[START] DrugsComClient")
 
-class WikiThreadTest(Thread):
-    def run(self):
-        print("[START] Redundant Thread")
-        print("[END] Redundant Thread")
-        pass
+# class WikiThreadTest(Thread):
+#     def run(self):
+#         print("[START] Redundant Thread")
+#         print("[END] Redundant Thread")
