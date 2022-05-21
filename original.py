@@ -3,7 +3,6 @@ import requests
 import time
 import io
 import os
-import multiprocessing
 
 # imports
 def mayoclinicDrugs():
