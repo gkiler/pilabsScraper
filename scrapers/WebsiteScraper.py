@@ -1,5 +1,3 @@
-import string
-
 
 class WebsiteScraper:
     def __init__(self, base_url=None, ext=list(), verbose=False):

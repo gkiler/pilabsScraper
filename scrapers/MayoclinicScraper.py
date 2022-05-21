@@ -1,9 +1,9 @@
 from scrapers.WebsiteScraper import WebsiteScraper
 
-import requests
-from bs4 import BeautifulSoup
 import time
+import requests
 import os
+from bs4 import BeautifulSoup
 import io
 
 class MayoclinicScraper(WebsiteScraper):

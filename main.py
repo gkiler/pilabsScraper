@@ -1,12 +1,4 @@
-from bs4 import BeautifulSoup
-import requests
-import io
-import os
-import multiprocessing
-
 from ClientThreads.ClientThreads import *
-
-from time import sleep
 
 THREADS = [DrugsComThread]
 

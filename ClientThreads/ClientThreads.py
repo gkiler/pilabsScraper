@@ -1,5 +1,4 @@
 from threading import Thread
-from time import time
 
 # Scrapers
 from scrapers.DrugsComScraper import DrugsComScraper
@@ -19,11 +18,6 @@ class MayoClinicThread(Thread):
         ).run(MayoclinicScraper)
         print("[END] MayoClinicClient")
 
-# class WebMDThreadTest(Thread):
-#     def run(self):
-#         print("[START] Redundant Thread")
-#         print("[END] Redundant Thread")
-
 class DrugsComThread(Thread):
     def run(self):
         print("[START] DrugsComClient")
@@ -35,7 +29,29 @@ class DrugsComThread(Thread):
         ).run(DrugsComScraper)
         print("[START] DrugsComClient")
 
-# class WikiThreadTest(Thread):
+# class WikiThread(Thread):
 #     def run(self):
 #         print("[START] Redundant Thread")
 #         print("[END] Redundant Thread")
+
+'''
+Read below to add your own thread for your website scraper. Each one of these declarations will result in an additional website
+being added to a thread and being scraped.
+
+In order to RUN your own WebsiteThread class, you need to add the name of the class into the `THREADS` variable in ~/main.py.
+
+Please read the README.md file for more information.
+'''
+# # Choose your scraper for Website
+# from scrapers.WebsiteScraper import WebsiteScraper
+
+# class WebsiteThread(Thread):
+#     def run(self):
+#         print("[START] WebsiteClient")
+#         websiteClient = WebsiteClient(
+#             name="website.com",
+#             base_url="",
+#             ext=["", "some_extension1", "some_extension2"],
+#             verbose=False
+#         ).run(WebsiteScraper)
+#         print("[END] WebsiteClient")
