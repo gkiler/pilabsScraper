@@ -55,6 +55,14 @@ You should see:
 ### How to write parser <a name="ParserTutorial"></a>
 
 \<Insert Gwen's Parser Tutorial. Please include the modularization (how to create parser class, what method to override, etc).\>
+(First draft)
+
+Follow template in scrapeTemplate.py, replacing <var> as needed.
+A number of for loops is needed equal to as many pages deep the scraper must iterate through.
+For the template, it assumes a first index list, then a sub index of Aa Ab Ac and so on. This can be adjusted by removing the subletter loop and adjusting variable names in the deeper for loop accordingly.
+    
+Note: This template only works if the given website has an alphabetized index.
+
 
 ### How to modify <a name="Modification"></a>
 
