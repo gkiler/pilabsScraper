@@ -13,7 +13,7 @@ class MedlineScraper(WebsiteScraper):
         originDir = os.getcwd()
 
         base_url = self._base_url
-        base_url2 = base_url + 'druginfo/'
+        base_url2 = base_url + "/" + 'druginfo'
         time.sleep(5)
         base_html = requests.get(base_url + "/druginformation.html", headers=headers)
 
@@ -22,7 +22,7 @@ class MedlineScraper(WebsiteScraper):
 
         osDir = originDir + "\\" + "Drugs\\" "medlineDrugs"
         if not os.path.exists(osDir):
-            os.mkdir(osDir)
+            os.makedirs(osDir)
 
         indices = base_soup.find('ul', class_='alpha-links')
         indexLinks = indices.find_all('a', href=True)
@@ -37,11 +37,11 @@ class MedlineScraper(WebsiteScraper):
             if os.path.exists(testPath):
                 continue
             elif (not os.path.exists(newpath)):
-                os.mkdir(newpath)
+                os.makedirs(newpath)
 
-            os.chdir(newpath)
+            # os.chdir(newpath)
 
-            get_url = base_url + indexLetters['href']
+            get_url = base_url + "/" + indexLetters['href']
             print('[LOG] Getting URL ', get_url, '...')
 
             time.sleep(5)
@@ -58,7 +58,7 @@ class MedlineScraper(WebsiteScraper):
 
                 try:
                     tempLink = link['href'][2 : : ]
-                    url = base_url2 + tempLink
+                    url = base_url2 + "/" + tempLink
                     print('[LOG] Retrieving ', url, '...')
 
                     time.sleep(5)
@@ -90,7 +90,7 @@ class MedlineScraper(WebsiteScraper):
                     print('[LOG] NoneType object except')
                     continue
                 try:
-                    with io.open(header + '.txt', 'w', encoding='utf-8') as f:  # write to file
+                    with io.open(newpath + "\\" + header + '.txt', 'w', encoding='utf-8') as f:  # write to file
                         f.write(contentInstance.prettify()) 
                 except:
                     print('[LOG] Write error')

@@ -20,11 +20,10 @@ class DrugsComScraper(WebsiteScraper):
         
         if not os.path.exists(originDir + "\\Drugs"):
             os.mkdir(originDir + "\\Drugs")
-        os.chdir(originDir + "\\Drugs")
+        drugsPath = originDir + "\\Drugs"
         osDir = originDir + "\\" + "Drugs\\" "drugsCom"
         if not os.path.exists(osDir):
                 os.mkdir(osDir)
-        os.chdir(osDir)
 
         indices = base_soup.find('nav', class_='ddc-paging')
         indexLinks = indices.find_all('a',href=True)
@@ -36,7 +35,7 @@ class DrugsComScraper(WebsiteScraper):
             #add redundancy detections
             if not os.path.exists(newpath):
                 os.mkdir(newpath)
-            os.chdir(newpath)
+
             url = base_url + letters['href']
             print('Retrieving Drugs.com URL ',url,'...')
 
@@ -77,5 +76,5 @@ class DrugsComScraper(WebsiteScraper):
                         drugName = drugName.replace('/',' ')
                         errorLoc = drugName.find('/')
                     
-                    with io.open(drugName+'.txt','w',encoding='utf-8') as f:
+                    with io.open(newpath + "/" + drugName+'.txt','w',encoding='utf-8') as f:
                         f.write(drugInfo.prettify())

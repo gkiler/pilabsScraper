@@ -14,8 +14,6 @@ import io
 def medlineDrugs():
     headers = {'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:100.0) Gecko/20100101 Firefox/100.0'}
 
-    originDir = os.getcwd()
-
     base_url = 'https://medlineplus.gov/' #https://medlineplus.gov/druginfo/drug_Aa.html
     # fin_url = base_url + "/".join(self._ext)
     base_url2 = base_url + 'druginfo/'
@@ -27,7 +25,7 @@ def medlineDrugs():
 
     osDir = originDir + "\\" + "Drugs\\" "medlineDrugs"
     if not os.path.exists(osDir):
-        os.mkdir(osDir)
+        os.makedirs(osDir)
 
     indices = base_soup.find('ul', class_='alpha-links')
     indexLinks = indices.find_all('a', href=True)
@@ -103,4 +101,6 @@ def medlineDrugs():
                     f.write(contentInstance.prettify()) 
             except:
                 print('[LOG] Write error')
+
+originDir = os.getcwd()
 medlineDrugs()

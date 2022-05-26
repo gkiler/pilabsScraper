@@ -20,14 +20,14 @@ class MayoclinicScraper(WebsiteScraper):
         
         osDir = originDir + "\\" + "Drugs\\" "mayoclinicDrugs"
         if not os.path.exists(osDir):
-                os.mkdir(osDir)
+                os.makedirs(osDir)
 
         indices = base_soup.find('ol', class_='acces-alpha')
         indexLinks = indices.find_all('a', href=True)
         
         for indexLetters in indexLinks:
             letterName = indexLetters.select('span')[1].get_text()
-            newpath = osDir + "\\" + letterName
+            newpath = osDir + "\\" + letterName.strip()
             
             nextLetter = chr(ord(letterName)+1)
             testPath = osDir + "\\" + nextLetter
@@ -35,9 +35,7 @@ class MayoclinicScraper(WebsiteScraper):
             if os.path.exists(testPath):
                 continue
             elif (not os.path.exists(newpath)):
-                os.mkdir(newpath)
-
-            os.chdir(newpath)
+                os.makedirs(newpath)
 
             get_url = base_url + indexLetters['href']
             print('Getting URL ', get_url, '...')
@@ -94,7 +92,7 @@ class MayoclinicScraper(WebsiteScraper):
                     print('NoneType object except')
                     continue
                 try:
-                    with io.open(header + '.txt', 'w', encoding='utf-8') as f:  # write to file
+                    with io.open(newpath + "\\" + header + '.txt', 'w', encoding='utf-8') as f:  # write to file
                         f.write(contentInstance.prettify()) 
                 except:
                     print('Write error')
@@ -111,14 +109,14 @@ class MayoclinicScraper(WebsiteScraper):
 
         osDir = originDir + "\\" + "Conditions\\"+"mayoclinicConditions"
         if not os.path.exists(osDir):
-                os.mkdir(osDir)
+                os.makedirs(osDir)
 
         indices = base_soup.find('ol', class_='acces-alpha')
         indexLinks = indices.find_all('a', href=True)
         
         for indexLetters in indexLinks: #add this stuff into a queue
             letterName = indexLetters.select('span')[1].get_text()
-            newpath = osDir + "\\" + letterName
+            newpath = osDir + "\\" + letterName.strip()
             
             nextLetter = chr(ord(letterName)+1)
             testPath = osDir + "\\" + nextLetter
@@ -127,9 +125,7 @@ class MayoclinicScraper(WebsiteScraper):
                 continue
 
             if not os.path.exists(newpath):
-                os.mkdir(newpath)
-
-            os.chdir(newpath)
+                os.makedirs(newpath)
 
             get_url = base_url + indexLetters['href']
             print('Getting URL ', get_url, '...')
@@ -155,8 +151,7 @@ class MayoclinicScraper(WebsiteScraper):
                     print('Retrieved ', header, ' data...')
 
                     contentInstance = letterSoup.find('div', class_='content')  # all info on page
-                    # subContentInstance = contentInstance.select('div')[2].get_text() #sub info of disease #commented due to bug with non uniform webpages
-                    
+
                     try:
                         headerLoc = header.find('/')
                         while (headerLoc != -1):
@@ -167,10 +162,9 @@ class MayoclinicScraper(WebsiteScraper):
                 except:
                     print('NoneType Header Error')
 
-            
-
                 try:
-                    with io.open(header + '.txt', 'w', encoding='utf-8') as f:  # write to file
+                    with io.open(newpath + "\\" + header + '.txt', 'w', encoding='utf-8') as f:  # write to file
+                        # print(newpath + "\\" + header + ".txt")
                         f.write(contentInstance.get_text()) #change to without text to preserve formatting. fuck
                 except:
                     print("Error occurred in write")
