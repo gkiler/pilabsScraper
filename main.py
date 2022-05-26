@@ -1,6 +1,6 @@
 from ClientThreads.ClientThreads import *
 
-THREADS = [DrugsComThread]
+THREADS = [DrugsComThread, MayoClinicThread, MedlineThread, WebMDThread]
 
 def main():
     # Runs every thread at the same time. Might want to wait a bit to run them

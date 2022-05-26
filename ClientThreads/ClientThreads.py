@@ -3,6 +3,8 @@ from threading import Thread
 # Scrapers
 from scrapers.DrugsComScraper import DrugsComScraper
 from scrapers.MayoclinicScraper import MayoclinicScraper
+from scrapers.MedlineScraper import MedlineScraper
+from scrapers.WebMDScraper import WebMDScraper
 
 # Clients
 from clients.WebsiteClient import WebsiteClient
@@ -27,7 +29,28 @@ class DrugsComThread(Thread):
             ext=["", "drug_information.html"],
             verbose=False
         ).run(DrugsComScraper)
-        print("[START] DrugsComClient")
+        print("[END] DrugsComClient")
+
+class MedlineThread(Thread):
+    def run(self):
+        print("[START] MedlineThread")
+        medlineClient = WebsiteClient(
+            name="medline",
+            base_url="https://medlineplus.gov",
+            ext=[""],
+            verbose=False
+        ).run(MedlineScraper)
+        print("[END] MedlineClient")
+
+class WebMDThread(Thread):
+    def run(self):
+        print("[START] WebMDThread")
+        webMDClient = WebsiteClient(
+            name="webmd",
+            base_url="https://www.webmd.com",
+            ext=[""],
+            verbose=False
+        ).run(WebMDScraper)
 
 # class WikiThread(Thread):
 #     def run(self):
