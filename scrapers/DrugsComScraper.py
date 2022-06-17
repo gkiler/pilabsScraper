@@ -5,9 +5,14 @@ import requests
 import os
 from bs4 import BeautifulSoup
 import io
+import json
+from os.path import exists
+from datetime import datetime
 
 class DrugsComScraper(WebsiteScraper):
     def scrape(self):
+        indexCount = 0
+
         originDir = os.getcwd()
 
         base_url = self._base_url
@@ -20,10 +25,13 @@ class DrugsComScraper(WebsiteScraper):
         
         if not os.path.exists(originDir + "\\Drugs"):
             os.mkdir(originDir + "\\Drugs")
-        drugsPath = originDir + "\\Drugs"
+        # drugsPath = originDir + "\\Drugs"
         osDir = originDir + "\\" + "Drugs\\" "drugsCom"
         if not os.path.exists(osDir):
                 os.mkdir(osDir)
+
+       
+
 
         indices = base_soup.find('nav', class_='ddc-paging')
         indexLinks = indices.find_all('a',href=True)
@@ -59,6 +67,8 @@ class DrugsComScraper(WebsiteScraper):
                 subDrugList = subDrug.find_all('a', href=True)
                 
                 for drug in subDrugList:
+                    ++indexCount
+
                     drugName = drug.get_text()
                     drugUrl = base_url + drug['href']
 
@@ -68,7 +78,7 @@ class DrugsComScraper(WebsiteScraper):
                     print('Retrieved Drugs.com URL ', drugUrl)
                     
                     drugSoup = BeautifulSoup(drugHtml.text,'lxml')
-                    drugInfo = drugSoup.find('div',class_='contentBox')
+                    # drugInfo = drugSoup.find('div',class_='contentBox')
 
                     #fix file name errors
                     errorLoc = drugName.find('/')
@@ -76,5 +86,25 @@ class DrugsComScraper(WebsiteScraper):
                         drugName = drugName.replace('/',' ')
                         errorLoc = drugName.find('/')
                     
-                    with io.open(newpath + "/" + drugName+'.txt','w',encoding='utf-8') as f:
-                        f.write(drugInfo.prettify())
+             
+                    jsonPath = newpath + "/" + drugName + ".json"
+                        
+                    date = datetime.now()
+                    title = drugSoup.find("title").getText()
+                    
+                    data = {
+                            "name": drugName,
+                            "raw_html": drugSoup.prettify(),
+                            "source_url": drugUrl,
+                            "date_time_scraped": date.strftime("%d/%m/%Y %H:%M:%S"),
+                            "source_name": title,
+                            "index": indexCount                     
+                    }
+                    
+                    with io.open(jsonPath, 'w+', encoding='utf-8') as file:
+                        json.dump(data, file, indent = 4)
+                    
+
+                    #deprecated
+                    # with io.open(newpath + "/" + drugName+'.txt','w',encoding='utf-8') as f:
+                    #     f.write(drugInfo.prettify())
