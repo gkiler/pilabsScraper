@@ -8,11 +8,10 @@ import io
 import json
 from os.path import exists
 from datetime import datetime
+from pathvalidate import sanitize_filename #not native
 
 class DrugsComScraper(WebsiteScraper):
     def scrape(self):
-        indexCount = 0
-
         originDir = os.getcwd()
 
         base_url = self._base_url
@@ -30,15 +29,20 @@ class DrugsComScraper(WebsiteScraper):
         if not os.path.exists(osDir):
                 os.mkdir(osDir)
 
-       
-
-
         indices = base_soup.find('nav', class_='ddc-paging')
         indexLinks = indices.find_all('a',href=True)
 
         for letters in indexLinks:
             letterName = letters.get_text()
             newpath = osDir + "\\" + letterName
+            ##########################################
+            nextLetter = chr(ord(letterName)+1)
+            testPath = osDir + "\\" + nextLetter
+
+            if os.path.exists(testPath):
+                continue
+            elif (not os.path.exists(newpath)):
+                os.makedirs(newpath)#################
 
             #add redundancy detections
             if not os.path.exists(newpath):
@@ -49,13 +53,15 @@ class DrugsComScraper(WebsiteScraper):
 
             time.sleep(5)
             htmlText = requests.get(url).text
-
+        
             soup = BeautifulSoup(htmlText,'lxml')
             print('Retrieved Drugs.com URL ',url)
 
             subIndices = soup.find('nav', class_='ddc-paging paging-list-wrap ddc-mgb-2')
+            
             subIndexLinks = subIndices.find_all('a',href=True)
 
+            
             for subLetter in subIndexLinks:
                 print('Retrieving Drugs.com URL ', base_url + subLetter['href'],'...')
                 time.sleep(5)
@@ -64,10 +70,16 @@ class DrugsComScraper(WebsiteScraper):
                 subDrugSoup = BeautifulSoup(subHtmlText.text,'lxml')
 
                 subDrug = subDrugSoup.find('ul', class_='ddc-list-column-2')
-                subDrugList = subDrug.find_all('a', href=True)
-                
+                if subDrug == None:
+                    subDrug = subDrugSoup.find_all('ul',class_="ddc-list-unstyled")[1]
+                try:
+                    subDrugList = subDrug.find_all('a', href=True)
+                except:
+                    continue
+                # for item in subDrugList:
+                #     print(item['href'])
+
                 for drug in subDrugList:
-                    ++indexCount
 
                     drugName = drug.get_text()
                     drugUrl = base_url + drug['href']
@@ -81,25 +93,25 @@ class DrugsComScraper(WebsiteScraper):
                     # drugInfo = drugSoup.find('div',class_='contentBox')
 
                     #fix file name errors
-                    errorLoc = drugName.find('/')
-                    while (errorLoc != -1):
-                        drugName = drugName.replace('/',' ')
-                        errorLoc = drugName.find('/')
+                    # errorLoc = drugName.find('/')
+                    # while (errorLoc != -1):
+                    #     drugName = drugName.replace('/',' ')
+                    #     errorLoc = drugName.find('/')
                     
-             
-                    jsonPath = newpath + "/" + drugName + ".json"
+
+                    # fileName = "".join(x for x in drugName if x.isalnum()) #only alphanumeric
+                    fileName = sanitize_filename(drugName)
+                    jsonPath = newpath + "/" + fileName + ".json"
                         
                     date = datetime.now()
-                    title = drugSoup.find("title").getText()
                     
                     data = {
                             "name": drugName,
                             "raw_html": drugSoup.prettify(),
                             "source_url": drugUrl,
                             "date_time_scraped": date.strftime("%d/%m/%Y %H:%M:%S"),
-                            "source_name": title,
-                            "index": indexCount                     
-                    }
+                            "source_name": "Drugs.com"
+                        }
                     
                     with io.open(jsonPath, 'w+', encoding='utf-8') as file:
                         json.dump(data, file, indent = 4)

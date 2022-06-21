@@ -5,6 +5,11 @@ import requests
 import os
 from bs4 import BeautifulSoup
 import io
+import json
+from os.path import exists
+from datetime import datetime
+from pathvalidate import sanitize_filename #not native
+
 
 class MayoclinicScraper(WebsiteScraper):
     def scrape(self):
@@ -65,7 +70,7 @@ class MayoclinicScraper(WebsiteScraper):
                     print('Retrieval Error')
                     continue
                 try:
-                    letterSoup = BeautifulSoup(html_disease, 'lxml')
+                    drugSoup = BeautifulSoup(html_disease, 'lxml')
                 except:
                     print('Soup Error')
                     continue
@@ -73,14 +78,14 @@ class MayoclinicScraper(WebsiteScraper):
                 
                     # headerToLink = row.find('h1')
                 try:
-                    header = letterSoup.find('h1').find('a', href=link['href']).text  # name of disease
+                    header = drugSoup.find('h1').find('a', href=link['href']).text  # name of disease
                     print('Retrieved ', header, ' data...')
                 except:
                     print('Header error')
 
                 
                 
-                contentInstance = letterSoup.find('div',id='main-content')  # all info on page
+                # contentInstance = letterSoup.find('div',id='main-content')  # all info on page
                     # subContentInstance = contentInstance.select('div')[2].get_text() #sub info of disease #commented due to bug with non uniform webpages
                 
                 try:
@@ -92,8 +97,24 @@ class MayoclinicScraper(WebsiteScraper):
                     print('NoneType object except')
                     continue
                 try:
-                    with io.open(newpath + "\\" + header + '.txt', 'w', encoding='utf-8') as f:  # write to file
-                        f.write(contentInstance.prettify()) 
+                    drugName = header
+                    fileName = sanitize_filename(drugName)
+                    jsonPath = newpath + "/" + fileName + ".json"
+                        
+                    date = datetime.now()
+                    
+                    data = {
+                            "name": drugName,
+                            "raw_html": drugSoup.prettify(),
+                            "source_url": url,
+                            "date_time_scraped": date.strftime("%d/%m/%Y %H:%M:%S"),
+                            "source_name": "Mayoclinic"
+                        }
+                    
+                    with io.open(jsonPath, 'w+', encoding='utf-8') as file:
+                        json.dump(data, file, indent = 4)
+                    # with io.open(newpath + "\\" + header + '.txt', 'w', encoding='utf-8') as f:  # write to file
+                    #     f.write(contentInstance.prettify()) 
                 except:
                     print('Write error')
 
