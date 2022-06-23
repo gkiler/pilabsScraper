@@ -1,5 +1,6 @@
 Drugs/
-
+Diseases/
 __pycache__/
-
+Conditions/
 venv/
+scrapers/__pycache__/

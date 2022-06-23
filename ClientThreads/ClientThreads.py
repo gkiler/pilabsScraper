@@ -5,9 +5,32 @@ from scrapers.DrugsComScraper import DrugsComScraper
 from scrapers.MayoclinicScraper import MayoclinicScraper
 from scrapers.MedlineScraper import MedlineScraper
 from scrapers.WebMDScraper import WebMDScraper
-
+from scrapers.CDCScraper import CDCScraper
+from scrapers.NHSScottishScraper import NHSScottishScraper
 # Clients
 from clients.WebsiteClient import WebsiteClient
+
+class NHSScottishThread(Thread):
+    def run(self):
+        print("[START] NHSClient")
+        nhsClient = WebsiteClient(
+            name="NHS",
+            base_url="https://www.nhsinform.scot",
+            ext=[""],
+            verbose = False
+        ).run(NHSScottishScraper)
+        print("[END] NHSClient")
+
+class CDCThread(Thread):
+    def run(self):
+        print("[START] CDCClient")
+        cdcClient = WebsiteClient(
+            name="CDC",
+            base_url="https://www.cdc.gov",
+            ext=[""],
+            verbose=False
+        ).run(CDCScraper)
+        print("[END] CDCClient")
 
 class MayoClinicThread(Thread):
     def run(self):

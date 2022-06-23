@@ -5,6 +5,11 @@ import requests
 import os
 from bs4 import BeautifulSoup
 import io
+import json
+from os.path import exists
+from datetime import datetime
+from pathvalidate import sanitize_filename #not native
+
 
 class MedlineScraper(WebsiteScraper):
     def scrape(self):
@@ -42,7 +47,7 @@ class MedlineScraper(WebsiteScraper):
             # os.chdir(newpath)
 
             get_url = base_url + "/" + indexLetters['href']
-            print('[LOG] Getting URL ', get_url, '...')
+            print('[MEDLINE][LOG] Getting URL ', get_url, '...')
 
             time.sleep(5)
             
@@ -59,27 +64,27 @@ class MedlineScraper(WebsiteScraper):
                 try:
                     tempLink = link['href'][2 : : ]
                     url = base_url2 + "/" + tempLink
-                    print('[LOG] Retrieving ', url, '...')
+                    print('[MEDLINE][LOG] Retrieving ', url, '...')
 
                     time.sleep(5)
                     html_drugs = requests.get(url, headers=headers).text
                     
                     
                 except:
-                    print('[LOG] Retrieval Error')
+                    print('[MEDLINE][LOG] Retrieval Error')
                     continue
                 try:
-                    letterSoup = BeautifulSoup(html_drugs, 'lxml')
+                    drugSoup = BeautifulSoup(html_drugs, 'lxml')
                 except:
-                    print('[LOG] Soup Error')
+                    print('[MEDLINE][LOG] Soup Error')
                     continue
                 try:
-                    header = letterSoup.find('h1').text # name of disease
-                    print('[LOG] Retrieved ', header, ' data...')
+                    header = drugSoup.find('h1').text # name of disease
+                    print('[MEDLINE][LOG] Retrieved ', header, ' data...')
                 except:
-                    print('[LOG] Header error')
+                    print('[MEDLINE][LOG] Header error')
                 
-                contentInstance = letterSoup.find('div',id='mplus-content')  # all info on page
+                # contentInstance = letterSoup.find('div',id='mplus-content')  # all info on page
                 
                 try:
                     headerLoc = header.find('/')
@@ -87,10 +92,26 @@ class MedlineScraper(WebsiteScraper):
                         headerLoc = header.find('/')
                         header = header.replace('/',' ')
                 except:
-                    print('[LOG] NoneType object except')
+                    print('[MEDLINE][LOG] NoneType object except')
                     continue
                 try:
-                    with io.open(newpath + "\\" + header + '.txt', 'w', encoding='utf-8') as f:  # write to file
-                        f.write(contentInstance.prettify()) 
+                    drugName = header
+                    fileName = sanitize_filename(drugName)
+                    jsonPath = newpath + "/" + fileName + ".json"
+                        
+                    date = datetime.now()
+                    
+                    data = {
+                            "name": drugName,
+                            "raw_html": drugSoup.prettify(),
+                            "source_url": url,
+                            "date_time_scraped": date.strftime("%d/%m/%Y %H:%M:%S"),
+                            "source_name": "Medline"
+                        }
+                    
+                    with io.open(jsonPath, 'w+', encoding='utf-8') as file:
+                        json.dump(data, file, indent = 4)
+                    # with io.open(newpath + "\\" + header + '.txt', 'w', encoding='utf-8') as f:  # write to file
+                    #     f.write(contentInstance.prettify()) 
                 except:
-                    print('[LOG] Write error')
+                    print('[MEDLINE][LOG] Write error')
