@@ -47,7 +47,7 @@ class MedlineScraper(WebsiteScraper):
             # os.chdir(newpath)
 
             get_url = base_url + "/" + indexLetters['href']
-            print('[LOG] Getting URL ', get_url, '...')
+            print('[MEDLINE][LOG] Getting URL ', get_url, '...')
 
             time.sleep(5)
             
@@ -64,25 +64,25 @@ class MedlineScraper(WebsiteScraper):
                 try:
                     tempLink = link['href'][2 : : ]
                     url = base_url2 + "/" + tempLink
-                    print('[LOG] Retrieving ', url, '...')
+                    print('[MEDLINE][LOG] Retrieving ', url, '...')
 
                     time.sleep(5)
                     html_drugs = requests.get(url, headers=headers).text
                     
                     
                 except:
-                    print('[LOG] Retrieval Error')
+                    print('[MEDLINE][LOG] Retrieval Error')
                     continue
                 try:
                     drugSoup = BeautifulSoup(html_drugs, 'lxml')
                 except:
-                    print('[LOG] Soup Error')
+                    print('[MEDLINE][LOG] Soup Error')
                     continue
                 try:
                     header = drugSoup.find('h1').text # name of disease
-                    print('[LOG] Retrieved ', header, ' data...')
+                    print('[MEDLINE][LOG] Retrieved ', header, ' data...')
                 except:
-                    print('[LOG] Header error')
+                    print('[MEDLINE][LOG] Header error')
                 
                 # contentInstance = letterSoup.find('div',id='mplus-content')  # all info on page
                 
@@ -92,7 +92,7 @@ class MedlineScraper(WebsiteScraper):
                         headerLoc = header.find('/')
                         header = header.replace('/',' ')
                 except:
-                    print('[LOG] NoneType object except')
+                    print('[MEDLINE][LOG] NoneType object except')
                     continue
                 try:
                     drugName = header
@@ -114,4 +114,4 @@ class MedlineScraper(WebsiteScraper):
                     # with io.open(newpath + "\\" + header + '.txt', 'w', encoding='utf-8') as f:  # write to file
                     #     f.write(contentInstance.prettify()) 
                 except:
-                    print('[LOG] Write error')
+                    print('[MEDLINE][LOG] Write error')

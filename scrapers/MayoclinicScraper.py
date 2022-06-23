@@ -13,6 +13,9 @@ from pathvalidate import sanitize_filename #not native
 
 class MayoclinicScraper(WebsiteScraper):
     def scrape(self):
+        self.parse_diseases()
+
+
         originDir = os.getcwd()
         headers = self._headers
         base_url = 'https://www.mayoclinic.org'
@@ -21,7 +24,7 @@ class MayoclinicScraper(WebsiteScraper):
         
 
         base_soup = BeautifulSoup(base_html, 'lxml')
-        print('Retrieved base indices...')
+        print('[MAYOCLINIC]Retrieved base indices...')
         
         osDir = originDir + "\\" + "Drugs\\" "mayoclinicDrugs"
         if not os.path.exists(osDir):
@@ -43,7 +46,7 @@ class MayoclinicScraper(WebsiteScraper):
                 os.makedirs(newpath)
 
             get_url = base_url + indexLetters['href']
-            print('Getting URL ', get_url, '...')
+            print('[MAYOCLINIC]Getting URL ', get_url, '...')
 
             time.sleep(5)
             
@@ -59,7 +62,7 @@ class MayoclinicScraper(WebsiteScraper):
             for link in webLink:
 
                 try:
-                    print('Retrieving ', link['href'], '...')
+                    print('[MAYOCLINIC]Retrieving ', link['href'], '...')
                     url = base_url + link['href']
 
                     time.sleep(5)
@@ -67,35 +70,35 @@ class MayoclinicScraper(WebsiteScraper):
                     
                     
                 except:
-                    print('Retrieval Error')
+                    print('[MAYOCLINIC]Retrieval Error')
                     continue
                 try:
                     drugSoup = BeautifulSoup(html_disease, 'lxml')
                 except:
-                    print('Soup Error')
+                    print('[MAYOCLINIC]Soup Error')
                     continue
                     # row = letterSoup.find('div', class_='row')  # disease information
                 
                     # headerToLink = row.find('h1')
                 try:
                     header = drugSoup.find('h1').find('a', href=link['href']).text  # name of disease
-                    print('Retrieved ', header, ' data...')
+                    print('[MAYOCLINIC]Retrieved ', header, ' data...')
                 except:
-                    print('Header error')
+                    print('[MAYOCLINIC]Header error')
 
                 
                 
                 # contentInstance = letterSoup.find('div',id='main-content')  # all info on page
                     # subContentInstance = contentInstance.select('div')[2].get_text() #sub info of disease #commented due to bug with non uniform webpages
                 
-                try:
-                    headerLoc = header.find('/')
-                    while (headerLoc != -1):
-                        headerLoc = header.find('/')
-                        header = header.replace('/',' ')
-                except:
-                    print('NoneType object except')
-                    continue
+                # try:
+                #     headerLoc = header.find('/')
+                #     while (headerLoc != -1):
+                #         headerLoc = header.find('/')
+                #         header = header.replace('/',' ')
+                # except:
+                #     print('NoneType object except')
+                #     continue
                 try:
                     drugName = header
                     fileName = sanitize_filename(drugName)
@@ -118,24 +121,26 @@ class MayoclinicScraper(WebsiteScraper):
                 except:
                     print('Write error')
 
-        self.parse_diseases()   
 
     def parse_diseases(self):
         originDir = os.getcwd()
-        base_url = self._base_url
-        base_html = requests.get(self._base_url + "/diseases-conditions").text
-        base_soup = BeautifulSoup(base_html, 'lxml')
-        print('Retrieved base indices...')
+        headers = self._headers
+        base_url = 'https://www.mayoclinic.org'
         time.sleep(5)
+        base_html = requests.get("https://www.mayoclinic.org/diseases-conditions/index?letter=A", headers=headers).text
+        
 
-        osDir = originDir + "\\" + "Conditions\\"+"mayoclinicConditions"
+        base_soup = BeautifulSoup(base_html, 'lxml')
+        print('[MAYOCLINIC]Retrieved base indices...')
+        
+        osDir = originDir + "\\" + "Diseases\\" "mayoclinicDiseases"
         if not os.path.exists(osDir):
                 os.makedirs(osDir)
 
         indices = base_soup.find('ol', class_='acces-alpha')
         indexLinks = indices.find_all('a', href=True)
         
-        for indexLetters in indexLinks: #add this stuff into a queue
+        for indexLetters in indexLinks:
             letterName = indexLetters.select('span')[1].get_text()
             newpath = osDir + "\\" + letterName.strip()
             
@@ -144,50 +149,81 @@ class MayoclinicScraper(WebsiteScraper):
 
             if os.path.exists(testPath):
                 continue
-
-            if not os.path.exists(newpath):
+            elif (not os.path.exists(newpath)):
                 os.makedirs(newpath)
 
             get_url = base_url + indexLetters['href']
-            print('Getting URL ', get_url, '...')
+            print('[MAYOCLINIC]Getting URL ', get_url, '...')
 
-            html_text = requests.get(get_url).text
+            time.sleep(5)
+            
+            html_text = requests.get(get_url, headers=headers).text
+
             soup = BeautifulSoup(html_text, 'lxml')
             print("Retrieved index...")
 
             diseases = soup.find('div', class_='index content-within', id='index')
             webLink = diseases.find_all('a', href=True)
-
-            time.sleep(5)
+            
+            
             for link in webLink:
-                print('Retrieving ', link['href'], '...')
-                url = base_url + link['href']
-                html_disease = requests.get(url).text
-
-                letterSoup = BeautifulSoup(html_disease, 'lxml')
-                row = letterSoup.find('div', class_='row')  # disease information
 
                 try:
-                    header = row.find('a', href=link['href']).text  # name of disease
-                    print('Retrieved ', header, ' data...')
+                    print('[MAYOCLINIC]Retrieving ', link['href'], '...')
+                    url = base_url + link['href']
 
-                    contentInstance = letterSoup.find('div', class_='content')  # all info on page
-
-                    try:
-                        headerLoc = header.find('/')
-                        while (headerLoc != -1):
-                            headerLoc = header.find('/')
-                            header = header.replace('/',' ')
-                    except:
-                        print('NoneType object except')
+                    time.sleep(5)
+                    html_disease = requests.get(url, headers=headers).text
+                    
+                    
                 except:
-                    print('NoneType Header Error')
-
+                    print('[MAYOCLINIC]Retrieval Error')
+                    continue
                 try:
-                    with io.open(newpath + "\\" + header + '.txt', 'w', encoding='utf-8') as f:  # write to file
-                        # print(newpath + "\\" + header + ".txt")
-                        f.write(contentInstance.get_text()) #change to without text to preserve formatting. fuck
+                    diseaseSoup = BeautifulSoup(html_disease, 'lxml')
                 except:
-                    print("Error occurred in write")
-                # according to google, ethical text scraping waits 5 seconds
-                time.sleep(5)
+                    print('[MAYOCLINIC]Soup Error')
+                    continue
+                    # row = letterSoup.find('div', class_='row')  # disease information
+                
+                    # headerToLink = row.find('h1')
+                try:
+                    header = diseaseSoup.find('h1').find('a', href=link['href']).text  # name of disease
+                    print('[MAYOCLINIC]Retrieved ', header, ' data...')
+                except:
+                    print('[MAYOCLINIC]Header error')
+
+                
+                
+                # contentInstance = letterSoup.find('div',id='main-content')  # all info on page
+                    # subContentInstance = contentInstance.select('div')[2].get_text() #sub info of disease #commented due to bug with non uniform webpages
+                
+                # try:
+                #     headerLoc = header.find('/')
+                #     while (headerLoc != -1):
+                #         headerLoc = header.find('/')
+                #         header = header.replace('/',' ')
+                # except:
+                #     print('[MAYOCLINIC]NoneType object except')
+                #     continue
+                try:
+                    diseaseName = header
+                    fileName = sanitize_filename(diseaseName)
+                    jsonPath = newpath + "/" + fileName + ".json"
+                        
+                    date = datetime.now()
+                    
+                    data = {
+                            "name": diseaseName,
+                            "raw_html": diseaseSoup.prettify(),
+                            "source_url": url,
+                            "date_time_scraped": date.strftime("%d/%m/%Y %H:%M:%S"),
+                            "source_name": "Mayoclinic"
+                        }
+                    
+                    with io.open(jsonPath, 'w+', encoding='utf-8') as file:
+                        json.dump(data, file, indent = 4)
+                    # with io.open(newpath + "\\" + header + '.txt', 'w', encoding='utf-8') as f:  # write to file
+                    #     f.write(contentInstance.prettify()) 
+                except:
+                    print('[MAYOCLINIC]Write error')

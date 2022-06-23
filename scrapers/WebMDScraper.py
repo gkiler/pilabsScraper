@@ -20,7 +20,7 @@ class WebMDScraper(WebsiteScraper):
         base_html = requests.get(self._base_url + "/drugs/2/alpha/a", headers=headers).text
 
         base_soup = BeautifulSoup(base_html, 'lxml')
-        print('Retrieved base indices...')
+        print('[WEBMD]Retrieved base indices...')
 
         if not os.path.exists(originDir + "\\Drugs"):
             os.mkdir(originDir + "\\Drugs")
@@ -47,22 +47,22 @@ class WebMDScraper(WebsiteScraper):
                 os.makedirs(newpath)
             
             url = base_url + "/" + letters['href']
-            print('Retrieving WebMD URL ',url,'...')
+            print('[WEBMD]Retrieving WebMD URL ',url,'...')
 
             time.sleep(5)
             htmlText = requests.get(url, headers=headers).text
 
             soup = BeautifulSoup(htmlText,'lxml')
-            print('Retrieved WebMD URL ',url)
+            print('[WEBMD]Retrieved WebMD URL ',url)
 
             subIndices = soup.find('ul',class_='browse-letters squares sub-alpha')
             subIndexLinks = subIndices.find_all('a',href=True)
 
             for subLetter in subIndexLinks:
-                print('Retrieving WebMD URL ', base_url + "/" + subLetter['href'],'...')
+                print('[WEBMD]Retrieving WebMD URL ', base_url + "/" + subLetter['href'],'...')
                 time.sleep(5)
                 subHtmlText = requests.get(base_url + subLetter['href'], headers=headers)
-                print('Retrieved WebMD URL ', base_url + subLetter['href'])
+                print('[WEBMD]Retrieved WebMD URL ', base_url + subLetter['href'])
                 subDrugSoup = BeautifulSoup(subHtmlText.text,'lxml')
 
                 try:
@@ -74,10 +74,10 @@ class WebMDScraper(WebsiteScraper):
                     drugName = drug.get_text()
                     drugUrl = base_url + "/" + drug['href']
 
-                    print('Retrieving WebMD URL ', drugUrl,'...')
+                    print('[WEBMD]Retrieving WebMD URL ', drugUrl,'...')
                     time.sleep(5)
                     drugHtml = requests.get(drugUrl, headers=headers)
-                    print('Retrieved WebMD URL ', drugUrl)
+                    print('[WEBMD]Retrieved WebMD URL ', drugUrl)
                     
                     drugSoup = BeautifulSoup(drugHtml.text,'lxml')
                     # drugInfo = drugSoup.find('div',class_='pane webmd-row')

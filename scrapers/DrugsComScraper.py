@@ -20,7 +20,7 @@ class DrugsComScraper(WebsiteScraper):
         base_html = requests.get(base_url + "/".join(self._ext)).text
 
         base_soup = BeautifulSoup(base_html, 'lxml')
-        print('Retrieved base indices...')
+        print('[DRUGS.COM]Retrieved base indices...')
         
         if not os.path.exists(originDir + "\\Drugs"):
             os.mkdir(originDir + "\\Drugs")
@@ -49,24 +49,24 @@ class DrugsComScraper(WebsiteScraper):
                 os.mkdir(newpath)
 
             url = base_url + letters['href']
-            print('Retrieving Drugs.com URL ',url,'...')
+            print('[DRUGS.COM]Retrieving Drugs.com URL ',url,'...')
 
             time.sleep(5)
-            htmlText = requests.get(url).text
+            htmlText = requests.get(url).text#get the html to parse with beautifulsoup
         
             soup = BeautifulSoup(htmlText,'lxml')
-            print('Retrieved Drugs.com URL ',url)
+            print('[DRUGS.COM]Retrieved Drugs.com URL ',url)
 
-            subIndices = soup.find('nav', class_='ddc-paging paging-list-wrap ddc-mgb-2')
+            subIndices = soup.find('nav', class_='ddc-paging paging-list-wrap ddc-mgb-2')#find index list of hrefs
             
             subIndexLinks = subIndices.find_all('a',href=True)
 
             
             for subLetter in subIndexLinks:
-                print('Retrieving Drugs.com URL ', base_url + subLetter['href'],'...')
+                print('[DRUGS.COM]Retrieving Drugs.com URL ', base_url + subLetter['href'],'...')
                 time.sleep(5)
                 subHtmlText = requests.get(base_url + subLetter['href'])
-                print('Retrieved Drugs.com URL ', base_url + subLetter['href'])
+                print('[DRUGS.COM]Retrieved Drugs.com URL ', base_url + subLetter['href'])
                 subDrugSoup = BeautifulSoup(subHtmlText.text,'lxml')
 
                 subDrug = subDrugSoup.find('ul', class_='ddc-list-column-2')
@@ -84,10 +84,10 @@ class DrugsComScraper(WebsiteScraper):
                     drugName = drug.get_text()
                     drugUrl = base_url + drug['href']
 
-                    print('Retrieving Drugs.com URL ', drugUrl,'...')
+                    print('[DRUGS.COM]Retrieving Drugs.com URL ', drugUrl,'...')
                     time.sleep(5)
                     drugHtml = requests.get(drugUrl)
-                    print('Retrieved Drugs.com URL ', drugUrl)
+                    print('[DRUGS.COM]Retrieved Drugs.com URL ', drugUrl)
                     
                     drugSoup = BeautifulSoup(drugHtml.text,'lxml')
                     # drugInfo = drugSoup.find('div',class_='contentBox')
