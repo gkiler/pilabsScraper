@@ -1,11 +1,11 @@
 from scrapers.WebsiteScraper import WebsiteScraper
 
-import time
-import requests
-import os
+import time 
+import requests # for requsting urls
+import os # provides functions for creating and removing a directory (folder)
 from bs4 import BeautifulSoup
-import io
-import json
+import io # allows us to manage file-related input and output operations
+import json # for json outputting
 from os.path import exists
 from datetime import datetime
 from pathvalidate import sanitize_filename #not native
@@ -23,7 +23,7 @@ class WebMDScraper(WebsiteScraper):
         print('[WEBMD]Retrieved base indices...')
 
         if not os.path.exists(originDir + "\\Drugs"): #if not exists, create drugs directory in originDir
-            os.mkdir(originDir + "\\Drugs")
+            os.mkdir(originDir + "\\Drugs") # makes new folder
         drugsPath = originDir + "\\Drugs"
 
         osDir = originDir + "\\" + "Drugs\\" + "WebMD" #if not exists, create WebMD directory
@@ -58,45 +58,30 @@ class WebMDScraper(WebsiteScraper):
                                                                                    #These are contained within the class stated in the statement
             subIndexLinks = subIndices.find_all('a',href=True) #Retrieve indices
 
-            for subLetter in subIndexLinks: #Iterate through subletters
-                print('[WEBMD]Retrieving WebMD URL ', base_url + "/" + subLetter['href'],'...')
+            for drug in subDrugList:
+                drugName = drug.get_text() #retrieve name of drug from html element
+                drugUrl = base_url + "/" + drug['href'] #form drug link
+
+                print('[WEBMD]Retrieving WebMD URL ', drugUrl,'...')
                 time.sleep(5)
-                subHtmlText = requests.get(base_url + subLetter['href'], headers=headers) #wait and request
-                print('[WEBMD]Retrieved WebMD URL ', base_url + subLetter['href'])
-                subDrugSoup = BeautifulSoup(subHtmlText.text,'lxml') #soup
+                drugHtml = requests.get(drugUrl, headers=headers) #wait and request
+                print('[WEBMD]Retrieved WebMD URL ', drugUrl)
+                
+                drugSoup = BeautifulSoup(drugHtml.text,'lxml') #soup
 
-                try:
-                    subDrug = subDrugSoup.find('div',class_='drugs-search-list-conditions') #Drug hyperlinks are contained within this class
-                                                                                                
-                                                                                            #numerous try catch statements ensure that the entire program doesn't break if one website breaks.
-                                                                                            #this can be improved on by adding error logging for when specific crashes occur and saving the log. Other websites are missing this feature
-                    subDrugList = subDrug.find_all('a',href=True) #retrieve all drug
-                except:
-                    continue
-                for drug in subDrugList:
-                    drugName = drug.get_text() #retrieve name of drug from html element
-                    drugUrl = base_url + "/" + drug['href'] #form drug link
-
-                    print('[WEBMD]Retrieving WebMD URL ', drugUrl,'...')
-                    time.sleep(5)
-                    drugHtml = requests.get(drugUrl, headers=headers) #wait and request
-                    print('[WEBMD]Retrieved WebMD URL ', drugUrl)
-                    
-                    drugSoup = BeautifulSoup(drugHtml.text,'lxml') #soup
-
-                    fileName = sanitize_filename(drugName) #ensure drugs with names including backslashes or other non alphanumeric chars lose that information to not break file naming.
-                    jsonPath = newpath + "/" + fileName + ".json"  #create json path                 
-                    
-                                        
-                    date = datetime.now() #date scraped
-                    
-                    data = { #json formatting of data in a python list object containing drug name, untouched html, origin url, date scraped, and source name
-                            "name": drugName,
-                            "raw_html": drugSoup.prettify(),
-                            "source_url": url,
-                            "date_time_scraped": date.strftime("%d/%m/%Y %H:%M:%S"),
-                            "source_name": "WebMD"
-                        }
-                    
-                    with io.open(jsonPath, 'w+', encoding='utf-8') as file:
-                        json.dump(data, file, indent = 4) #store "data" as json file
+                fileName = sanitize_filename(drugName) #ensure drugs with names including backslashes or other non alphanumeric chars lose that information to not break file naming.
+                jsonPath = newpath + "/" + fileName + ".json"  #create json path                 
+                
+                                    
+                date = datetime.now() #date scraped
+                
+                data = { #json formatting of data in a python list object containing drug name, untouched html, origin url, date scraped, and source name
+                        "name": drugName,
+                        "raw_html": drugSoup.prettify(),
+                        "source_url": url,
+                        "date_time_scraped": date.strftime("%d/%m/%Y %H:%M:%S"),
+                        "source_name": "WebMD"
+                    }
+                
+                with io.open(jsonPath, 'w+', encoding='utf-8') as file:
+                    json.dump(data, file, indent = 4) #store "data" as json file

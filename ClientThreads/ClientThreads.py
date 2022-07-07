@@ -7,6 +7,8 @@ from scrapers.MedlineScraper import MedlineScraper
 from scrapers.WebMDScraper import WebMDScraper
 from scrapers.CDCScraper import CDCScraper
 from scrapers.NHSScottishScraper import NHSScottishScraper
+from scrapers.FamilyDoctorScraper import FamilyDoctorScraper
+
 # Clients
 from clients.WebsiteClient import WebsiteClient
 
@@ -74,6 +76,16 @@ class WebMDThread(Thread):
             ext=[""],
             verbose=False
         ).run(WebMDScraper)
+
+class FamilyDoctorThread(Thread):
+    def run(self):
+        print("[START] FamilyDoctorThread")
+        familyDoctorClient = WebsiteClient(
+            name="familydoctor.org",
+            base_url="https://familydoctor.org/",
+            ext=[""],
+            verbose=False
+        ).run(FamilyDoctorScraper)
 
 # class WikiThread(Thread):
 #     def run(self):
