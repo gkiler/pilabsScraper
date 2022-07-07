@@ -10,7 +10,7 @@ from os.path import exists
 from datetime import datetime
 from pathvalidate import sanitize_filename #not native
 
-class FamilyDoctorScrapper(WebsiteScraper):
+class FamilyDoctorScraper(WebsiteScraper):
     def scrape(self):
         originDir = os.getcwd() # get current dir for file pathing C:/payto
         headers = self._headers # Many websites prevent scraping from default clients, so provide a client header such as firefox information
