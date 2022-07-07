@@ -58,7 +58,7 @@ class WebMDScraper(WebsiteScraper):
                                                                                    #These are contained within the class stated in the statement
             subIndexLinks = subIndices.find_all('a',href=True) #Retrieve indices
 
-            for drug in subIndices:
+            for drug in subIndexLinks:
                 drugName = drug.get_text() #retrieve name of drug from html element
                 drugUrl = base_url + "/" + drug['href'] #form drug link
 
