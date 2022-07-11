@@ -7,7 +7,9 @@ from scrapers.MedlineScraper import MedlineScraper
 from scrapers.WebMDScraper import WebMDScraper
 from scrapers.CDCScraper import CDCScraper
 from scrapers.NHSScottishScraper import NHSScottishScraper
-from scrapers.FamilyDoctorScraper import FamilyDoctorScraper
+# from scrapers.FamilyDoctorScraper import FamilyDoctorScraper
+
+from practiceScraper import FamilyDoctorScraper
 
 # Clients
 from clients.WebsiteClient import WebsiteClient

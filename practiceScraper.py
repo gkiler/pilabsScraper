@@ -30,6 +30,7 @@ class FamilyDoctorScraper(WebsiteScraper):
                 os.makedirs(osDir)
 
         indices = base_soup.find('div', class_='facet-container facet-alpha clearfix') #index hyperlinks to each letter of the alphabet contained here
+
         indexLinks = indices.find_all('a',href=True) #retrieve all href links within the container
 
         for letters in indexLinks: #iterate through each hyperlink
@@ -56,12 +57,13 @@ class FamilyDoctorScraper(WebsiteScraper):
             
             while True:
                 time.sleep(5)#wait 5 seconds, then request
+
                 htmlText = requests.get(url, headers=headers).text
                 soup = BeautifulSoup(htmlText,'lxml')
 
-                drugs = soup.find('div',id="search-results")
-                webLink = drugs.find_all('a', href=True)
-                
+                drugs = soup.find('div', id="search-results")
+                webLink = drugs.find_all('a', href=True, attrs={"class" : "link-to-post"})
+
                 for link in webLink:
                     diseaseName = link.get_text() #retrieve name of drug from html element
                     drugUrl = link['href'] #form drug link
@@ -76,7 +78,6 @@ class FamilyDoctorScraper(WebsiteScraper):
                     fileName = sanitize_filename(diseaseName) #ensure drugs with names including backslashes or other non alphanumeric chars lose that information to not break file naming.
                     jsonPath = newpath + "/" + fileName + ".json"  #create json path                 
                     
-                                        
                     date = datetime.now() #date scraped
                     
                     data = { #json formatting of data in a python list object containing drug name, untouched html, origin url, date scraped, and source name
@@ -88,9 +89,11 @@ class FamilyDoctorScraper(WebsiteScraper):
                         }
 
                 # how to go to next page
-                next_page_url = soup.find('li', class_="next")
-                if next_page_url.get('href'):
-                    url = next_page_url.get('href')
+                next_page_url = soup.find('li', attrs={"class": "next"})
+                # print(next_page_url)
+                if next_page_url:
+                    next_page_url = next_page_url.find("a", href=True)
+                    url = next_page_url['href']
                     print(url)
                 else:
                     break
