@@ -10,7 +10,6 @@ from os.path import exists
 from datetime import datetime
 from pathvalidate import sanitize_filename #not native
 
-
 class FamilyDoctorScraper(WebsiteScraper):
     def scrape(self):
         originDir = os.getcwd() #Get current dir for file pathing
@@ -20,7 +19,7 @@ class FamilyDoctorScraper(WebsiteScraper):
         base_html = requests.get(self._base_url + "/diseases-and-conditions/?alpha=A", headers=headers).text # Retrieve base index page to retrieve other index link
 
         base_soup = BeautifulSoup(base_html, 'lxml') #Create BS object to parse html
-        print('[FAMILYDOCTOR]Retrieved base indices...')
+        print('[FAMILYDOCTOR] Retrieved base indices...')
 
         diseasePath = originDir + "\\Disease" #variable not being used
         if not os.path.exists(diseasePath): #if not exists, create drugs directory in originDir
@@ -44,14 +43,14 @@ class FamilyDoctorScraper(WebsiteScraper):
                 continue
             elif (not os.path.exists(newpath)):
                 os.makedirs(newpath)
-            url = letters['href'] #Form complete url from href
-            print('[WEBMD]Retrieving WebMD URL ',url,'...') 
+            url = letters['href'] # Form complete url from href
+            print('[FAMILYDOCTOR] Retrieving WebMD URL ',url,'...') 
 
-            time.sleep(5)#wait 5 seconds, then request
+            time.sleep(5) # Wait 5 seconds, then request
             htmlText = requests.get(url, headers=headers).text
 
             soup = BeautifulSoup(htmlText,'lxml') #Soup
-            print('[WEBMD]Retrieved WebMD URL ',url) 
+            print('[FAMILYDOCTOR] Retrieved WebMD URL ',url) 
             
             #next_page_url = soup.find('li',class_='next') #can use li since I'm only checking for a single "next" link and I don't need to grab all the subletter links
             
@@ -67,10 +66,10 @@ class FamilyDoctorScraper(WebsiteScraper):
                     diseaseName = link.get_text() #retrieve name of drug from html element
                     drugUrl = link['href'] #form drug link
 
-                    print('[WEBMD]Retrieving WebMD URL ', drugUrl,'...')
+                    print('[FAMILYDOCTOR] Retrieving WebMD URL ', drugUrl,'...')
                     time.sleep(5)
                     drugHtml = requests.get(drugUrl, headers=headers) #wait and request
-                    print('[WEBMD]Retrieved WebMD URL ', drugUrl)
+                    print('[FAMILYDOCTOR] Retrieved WebMD URL ', drugUrl)
                     
                     drugSoup = BeautifulSoup(drugHtml.text,'lxml') #soup
 
