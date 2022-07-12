@@ -8,6 +8,7 @@ from scrapers.WebMDScraper import WebMDScraper
 from scrapers.CDCScraper import CDCScraper
 from scrapers.NHSScottishScraper import NHSScottishScraper
 from scrapers.FamilyDoctorScraper import FamilyDoctorScraper
+from scrapers.ECDCScraper import ECDCScraper
 
 # Clients
 from clients.WebsiteClient import WebsiteClient
@@ -81,11 +82,21 @@ class FamilyDoctorThread(Thread):
     def run(self):
         print("[START] FamilyDoctorThread")
         familyDoctorClient = WebsiteClient(
-            name="familydoctor.org",
+            name="Family Doctor",
             base_url="https://familydoctor.org/",
             ext=[""],
             verbose=False
         ).run(FamilyDoctorScraper)
+
+class ECDCThread(Thread):
+    def run(self):
+        print("[START] ECDCThread")
+        ECDCClient = WebsiteClient(
+            name="ECDC",
+            base_url="https://www.ecdc.europa.eu/en",
+            ext=[""],
+            verbose=False
+        ).run(ECDCScraper)
 
 # class WikiThread(Thread):
 #     def run(self):

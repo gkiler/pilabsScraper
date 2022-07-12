@@ -1,8 +1,8 @@
 from ClientThreads.ClientThreads import *
 from pathvalidate import sanitize_filename #not native
 
-# going to add family doctor thread once I'm done
-THREADS = [FamilyDoctorThread]  #, MedlineThread,WebMDThread,DrugsComThread, MayoClinicThread, CDCThread, # NHS
+# going to add ECDCThread once I'm done
+THREADS = [ECDCThread]  #FamilyDoctorThread, MedlineThread, WebMDThread, DrugsComThread, MayoClinicThread, CDCThread, NHSScottishThread
 
 def main():
     # Runs every thread at the same time. Might want to wait a bit to run them

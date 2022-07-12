@@ -48,7 +48,7 @@ class FamilyDoctorScraper(WebsiteScraper):
                 os.makedirs(newPath)
                                                 
             url = letters['href'] #Form complete url from href
-            print('[FamilyDoctor]Retrieving FamilyDoctor URL ',url,'...') 
+            print('[FamilyDoctor]Retrieving FamilyDoctor URL ',url,'...')
 
             time.sleep(5) # wait 5 seconds, then request
             htmlText = requests.get(url, headers=headers).text
