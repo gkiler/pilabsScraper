@@ -30,7 +30,7 @@ class FamilyDoctorScraper(WebsiteScraper):
         if not os.path.exists(osDir):
             os.makedirs(osDir) # creates new folder as well as sub-folder (for all letters)
 
-        indices = base_soup.find('div', class_='facet-container facet-alpha clearfix active') # where each letter of alphabet is contained
+        indices = base_soup.find('div', class_='facet-container facet-alpha clearfix') # where each letter of alphabet is contained
         indexLinks = indices.find_all('a', href=True) # retrieve all href links within container
 
         for letters in indexLinks: # iterate through each hyperlink
