@@ -9,6 +9,7 @@ from scrapers.CDCScraper import CDCScraper
 from scrapers.NHSScottishScraper import NHSScottishScraper
 from scrapers.FamilyDoctorScraper import FamilyDoctorScraper
 from scrapers.ECDCScraper import ECDCScraper
+from scrapers.RareDiseaseScraper import RareDiseaseScraper
 
 # Clients
 from clients.WebsiteClient import WebsiteClient
@@ -97,6 +98,16 @@ class ECDCThread(Thread):
             ext=[""],
             verbose=False
         ).run(ECDCScraper)
+
+class RareDiseaseThread(Thread):
+    def run(self):
+        print("[START] RareDiseaseThread")
+        RareDiseaseClient = WebsiteClient(
+            name="Rare Disease",
+            base_url="https://rarediseases.org",
+            ext=[""],
+            verbose=False
+        ).run(RareDiseaseScraper)
 
 # class WikiThread(Thread):
 #     def run(self):
