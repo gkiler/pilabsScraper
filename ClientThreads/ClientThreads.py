@@ -1,3 +1,4 @@
+from re import S
 from threading import Thread
 
 # Scrapers
@@ -10,6 +11,8 @@ from scrapers.NHSScottishScraper import NHSScottishScraper
 from scrapers.FamilyDoctorScraper import FamilyDoctorScraper
 from scrapers.ECDCScraper import ECDCScraper
 from scrapers.RareDiseaseScraper import RareDiseaseScraper
+from scrapers.RIDHScraper import RIDHScraper 
+# from scrapers.HealthlineDrugsScraper import HealthlineDrugsScraper
 
 # Clients
 from clients.WebsiteClient import WebsiteClient
@@ -108,6 +111,26 @@ class RareDiseaseThread(Thread):
             ext=[""],
             verbose=False
         ).run(RareDiseaseScraper)
+
+class RIDHThread(Thread):
+    def run(self):
+        print("[START] RIDHThread")
+        RIDHClient = WebsiteClient(
+            name="RIDH",
+            base_url="https://health.ri.gov",
+            ext=[""],
+            verbose=False
+        ).run(RIDHScraper) 
+        
+# class HealthlineDrugsThread(Thread):
+#     def run(self):
+#         print("[START] HealthlineDrugsThread")
+#         HealthlineDrugsClient = WebsiteClient(
+#             name="Healthline(Drugs)",
+#             base_url="https://www.healthline.com",
+#             ext=[""],
+#             verbose=False
+#         ).run(HealthlineDrugsScraper)
 
 # class WikiThread(Thread):
 #     def run(self):
