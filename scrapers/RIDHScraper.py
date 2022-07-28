@@ -56,9 +56,9 @@ class RIDHScraper(WebsiteScraper):
             data = {
                     "name": diseaseName,
                     "raw_html": diseaseSoup.prettify(),
-                    "source_url": url,
+                    "source_url": urlToDisease,
                     "date_time_scraped": date.strftime("%d/%m/%Y %H:%M:%S"),
-                    "source_name": "ECDC"
+                    "source_name": "RIDH"
                 }
             
             with io.open(jsonPath, 'w+', encoding='utf-8') as file:

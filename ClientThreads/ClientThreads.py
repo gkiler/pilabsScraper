@@ -16,7 +16,8 @@ from scrapers.HealthlineDrugsScraper import HealthlineDrugsScraper
 from scrapers.IllinoisScraper import IllinoisScraper
 from scrapers.MedlineDiseaseScraper import MedlineDiseaseScraper
 from scrapers.DBpediaScraper import DBpediaScraper
-
+from scrapers.RxlistScraper import RxlistScraper
+# from scrapers.HealthlineDrugsScraper import HealthlineDrugsScraper
 
 # Clients
 from clients.WebsiteClient import WebsiteClient
@@ -125,6 +126,16 @@ class RIDHThread(Thread):
             ext=[""],
             verbose=False
         ).run(RIDHScraper) 
+
+class RxlistThread(Thread):
+    def run(self):
+        print("[START] RxlistThread")
+        RIDHClient = WebsiteClient(
+            name="Rxlist",
+            base_url="https://www.rxlist.com",
+            ext=[""],
+            verbose=False
+        ).run(RxlistScraper)
         
 class HealthlineDrugsThread(Thread):
     def run(self):
