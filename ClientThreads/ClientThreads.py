@@ -12,7 +12,11 @@ from scrapers.FamilyDoctorScraper import FamilyDoctorScraper
 from scrapers.ECDCScraper import ECDCScraper
 from scrapers.RareDiseaseScraper import RareDiseaseScraper
 from scrapers.RIDHScraper import RIDHScraper 
-# from scrapers.HealthlineDrugsScraper import HealthlineDrugsScraper
+from scrapers.HealthlineDrugsScraper import HealthlineDrugsScraper
+from scrapers.IllinoisScraper import IllinoisScraper
+from scrapers.MedlineDiseaseScraper import MedlineDiseaseScraper
+from scrapers.DBpediaScraper import DBpediaScraper
+
 
 # Clients
 from clients.WebsiteClient import WebsiteClient
@@ -122,15 +126,47 @@ class RIDHThread(Thread):
             verbose=False
         ).run(RIDHScraper) 
         
-# class HealthlineDrugsThread(Thread):
-#     def run(self):
-#         print("[START] HealthlineDrugsThread")
-#         HealthlineDrugsClient = WebsiteClient(
-#             name="Healthline(Drugs)",
-#             base_url="https://www.healthline.com",
-#             ext=[""],
-#             verbose=False
-#         ).run(HealthlineDrugsScraper)
+class HealthlineDrugsThread(Thread):
+    def run(self):
+        print("[START] HealthlineDrugsThread")
+        HealthlineDrugsClient = WebsiteClient(
+            name="Healthline(Drugs)",
+            base_url="https://www.healthline.com",
+            ext=[""],
+            verbose=False
+        ).run(HealthlineDrugsScraper)
+
+class IllinoisThread(Thread):
+    def run(self):
+        print("[START] IllinoisThread")
+        IllinoisClient = WebsiteClient(
+            name="IDPH",
+            base_url="https://dph.illinois.gov",
+            ext=[""],
+            verbose=False
+        ).run(IllinoisScraper)
+        print("[END] IllinoisClient")
+
+class MedlineDiseaseThread(Thread):
+    def run(self):
+        print("[START] Medline Disease")
+        MedlineDClient = WebsiteClient(
+            name="Medline Plus Encyclopedia",
+            base_url="https://medlineplus.gov/ency/",
+            ext=[""],
+            verbose=False
+        ).run(MedlineDiseaseScraper)
+        print("[END] MedlineDClient")        
+
+class DBpediaThread(Thread):
+    def run(self):
+        print("[START] DBpediaThread")
+        DBpediaClient = WebsiteClient(
+            name="DBpedia",
+            base_url="https://dbpedia.org/",
+            ext=[""],
+            verbose=False
+        ).run(DBpediaScraper)
 
 # class WikiThread(Thread):
 #     def run(self):
