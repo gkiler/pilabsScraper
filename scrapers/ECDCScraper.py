@@ -51,7 +51,7 @@ class ECDCScraper(WebsiteScraper):
             data = {
                     "name": diseaseName,
                     "raw_html": diseaseSoup.prettify(),
-                    "source_url": url,
+                    "source_url": urlToDisease,
                     "date_time_scraped": date.strftime("%d/%m/%Y %H:%M:%S"),
                     "source_name": "ECDC"
                 }

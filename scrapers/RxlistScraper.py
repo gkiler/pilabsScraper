@@ -82,7 +82,7 @@ class RxlistScraper(WebsiteScraper):
                     data = { #json formatting of data in a python list object containing drug name, untouched html, origin url, date scraped, and source name
                             "name": drugName,
                             "raw_html": drugSoup.prettify(),
-                            "source_url": url,
+                            "source_url": drugUrl,
                             "date_time_scraped": date.strftime("%d/%m/%Y %H:%M:%S"),
                             "source_name": "Rxlist"
                         }
