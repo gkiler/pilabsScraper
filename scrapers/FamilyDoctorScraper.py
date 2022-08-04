@@ -43,7 +43,7 @@ class FamilyDoctorScraper(WebsiteScraper):
                                                     #TODO: Small error where indexes labelled "#" or "0-9" cannot be scraped as they are not alphanumeric. Add try catch statement
             testPath = osDir + "\\" + nextLetter 
             if os.path.exists(testPath):
-                continue
+                continue #skip this iteration of for loop
             elif (not os.path.exists(newPath)):
                 os.makedirs(newPath)
                                                 

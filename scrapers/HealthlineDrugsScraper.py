@@ -26,7 +26,7 @@ class HealthlineDrugsScraper(WebsiteScraper):
         osDir = originDir + "\\" + "Drugs\\" "HealthlineDrugs"
         if not os.path.exists(osDir):
                 os.makedirs(osDir)
-
+                
         drugContainer = base_soup.find('ul', class_="css-ufl5o8")
         drugs = drugContainer.find_all('a', href=True)
     
