@@ -13,6 +13,7 @@ from scrapers.ECDCScraper import ECDCScraper
 from scrapers.RareDiseaseScraper import RareDiseaseScraper
 from scrapers.RIDHScraper import RIDHScraper 
 from scrapers.RxlistScraper import RxlistScraper
+from scrapers.HonDossierScraper import HonDossierScraper
 # from scrapers.HealthlineDrugsScraper import HealthlineDrugsScraper
 
 # Clients
@@ -132,6 +133,16 @@ class RxlistThread(Thread):
             ext=[""],
             verbose=False
         ).run(RxlistScraper)
+
+class HonDossierThread(Thread):
+    def run(self):
+        print("[START] HonDossierThread")
+        HonDossierClient = WebsiteClient(
+            name="Hon Dossier",
+            base_url="https://www.hon.ch/Dossier/110_HONDossier.htm",
+            ext=[""],
+            verbose=False
+        ).run(HonDossierScraper)
         
 # class HealthlineDrugsThread(Thread):
 #     def run(self):
